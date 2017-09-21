@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
-         updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+         xsi:noNamespaceSchemaLocation="ehcache.xsd">
 
     <diskStore path="java.io.tmpdir"/>
 
-    <defaultCache maxEntriesLocalHeap="10000" eternal="false"
-                  timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
-                  maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120"
+    <!-- timeToLiveSeconds ，缓存最大生存时间，单位：秒 -->
+    <!-- timeToIdleSeconds ，缓存最大空闲时间(无访问)，单位：秒 -->
+    <!-- eternal ，设置为true时，表示永不过期，上面两项配置将被忽略 -->
+    <!-- maxEntriesLocalDisk ，允许写入磁盘缓存条目最大值 -->
+    <!-- memoryStoreEvictionPolicy ，设置内存存储淘汰策略，包含：LRU、LFU、FIFO三个取值， -->
+    <defaultCache maxEntriesLocalHeap="10000"
+                  eternal="false"
+                  timeToLiveSeconds="120"
+                  timeToIdleSeconds="60"
+                  diskSpoolBufferSizeMB="30"
+                  maxEntriesLocalDisk="10000000"
+                  diskExpiryThreadIntervalSeconds="120"
                   memoryStoreEvictionPolicy="LRU">
+        <!-- 持久化配置，可选项：localTempSwap、localRestartable -->
+        <!-- localTempSwap ，当堆内存或者非堆内存里面的元素已经满了的时候，将其中的元素临时的存放在磁盘上，一旦重启就会消失 -->
+        <!-- localRestartable ，该策略只对企业版Ehcache有用。它可以在重启的时候将堆内存或者非堆内存里面的元素持久化到硬盘上，重启之后再从硬盘上恢复元素到内存中 -->
         <persistence strategy="localTempSwap"/>
     </defaultCache>
 
-    <cache name="simple" timeToIdleSeconds="300"
-           timeToLiveSeconds="600" maxEntriesLocalHeap="10000" eternal="false"
-           overflowToDisk="false" memoryStoreEvictionPolicy="LFU"
+    <cache name="simple"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="10000"
+           eternal="false"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
-        <!-- <persistence strategy="localTempSwap" /> -->
     </cache>
 
 </ehcache>
